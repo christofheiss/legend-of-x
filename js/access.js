@@ -116,7 +116,7 @@ function downloadFile(file) {
 }
 function notice(text, ok = true) {
   const n = $('saveNotice'); n.textContent = text; n.hidden = false; n.dataset.ok = String(ok);
-  clearTimeout(notice.timer); notice.timer = setTimeout(() => { n.hidden = true; }, ok ? 3500 : 9000);
+  clearTimeout(notice.timer); notice.timer = setTimeout(() => { n.hidden = true; }, ok ? 3500 : 20000);
 }
 let saving = false;
 async function save() {
@@ -126,14 +126,18 @@ async function save() {
   try {
     const state = currentState(), file = await seal(state);
     await storeLocal(file);
-    let online = false;
+    let online = false, reason = '';
     if (CONFIG.saveUrl) {
-      try { online = (await worker({ token, file })).ok; } catch (e) { console.warn('Online-Speichern nicht möglich', e); }
+      try {
+        const res = await worker({ token, file });
+        online = res.ok;
+        if (!online) reason = `${res.status} ${(await res.json().catch(() => ({}))).error || ''}`.trim();
+      } catch (e) { reason = e.name || 'Netzwerk'; console.warn('Online-Speichern nicht möglich', e); }
     }
     if (online) notice('Spielstand online gespeichert.');
     else {
       downloadFile(file);
-      notice('Online-Speichern hat nicht geklappt. Dein Stand wurde als Datei heruntergeladen. Gib sie deiner Lehrperson ab.', false);
+      notice(`Online-Speichern hat nicht geklappt (${reason || 'kein Server'}). Dein Stand wurde als Datei heruntergeladen. Gib sie deiner Lehrperson ab.`, false);
     }
     window.saveSafety?.downloaded(JSON.stringify(state));
     return true;
