@@ -1,0 +1,100 @@
+{
+  "observatory": {
+    "source": "observatory",
+    "x": 30,
+    "y": 45,
+    "w": 1371,
+    "h": 998
+  },
+  "module": {
+    "source": "module",
+    "x": 23,
+    "y": 61,
+    "w": 1411,
+    "h": 954
+  },
+  "arena": {
+    "source": "arena",
+    "x": 16,
+    "y": 9,
+    "w": 1504,
+    "h": 984
+  },
+  "orbit": {
+    "source": "orbit",
+    "x": 41,
+    "y": 83,
+    "w": 1695,
+    "h": 737
+  },
+  "crystal": {
+    "source": "props",
+    "x": 102,
+    "y": 108,
+    "w": 345,
+    "h": 381
+  },
+  "rock": {
+    "source": "props",
+    "x": 585,
+    "y": 119,
+    "w": 366,
+    "h": 370
+  },
+  "rover": {
+    "source": "props",
+    "x": 1082,
+    "y": 108,
+    "w": 380,
+    "h": 376
+  },
+  "scanner": {
+    "source": "props",
+    "x": 164,
+    "y": 577,
+    "w": 223,
+    "h": 380
+  },
+  "probe": {
+    "source": "props",
+    "x": 592,
+    "y": 521,
+    "w": 352,
+    "h": 439
+  },
+  "solar": {
+    "source": "props",
+    "x": 1068,
+    "y": 617,
+    "w": 388,
+    "h": 335
+  },
+  "dust": {
+    "source": "terrain",
+    "x": 10,
+    "y": 10,
+    "w": 607,
+    "h": 607
+  },
+  "path": {
+    "source": "terrain",
+    "x": 637,
+    "y": 10,
+    "w": 607,
+    "h": 607
+  },
+  "basalt": {
+    "source": "terrain",
+    "x": 10,
+    "y": 637,
+    "w": 607,
+    "h": 607
+  },
+  "steel": {
+    "source": "terrain",
+    "x": 637,
+    "y": 637,
+    "w": 607,
+    "h": 607
+  }
+}

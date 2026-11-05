@@ -1,0 +1,72 @@
+{
+  "ruin-floor": {
+    "source": "ruins",
+    "x": 94,
+    "y": 104,
+    "w": 565,
+    "h": 538
+  },
+  "wall-horizontal": {
+    "source": "ruins",
+    "x": 783,
+    "y": 279,
+    "w": 999,
+    "h": 266
+  },
+  "wall-vertical": {
+    "source": "ruins",
+    "x": 1926,
+    "y": 61,
+    "w": 169,
+    "h": 604
+  },
+  "fish-orange": {
+    "source": "fish",
+    "x": 161,
+    "y": 219,
+    "w": 517,
+    "h": 274
+  },
+  "fish-red": {
+    "source": "fish",
+    "x": 836,
+    "y": 219,
+    "w": 517,
+    "h": 274
+  },
+  "fish-blue": {
+    "source": "fish",
+    "x": 1509,
+    "y": 219,
+    "w": 518,
+    "h": 274
+  },
+  "rock-0": {
+    "source": "rocks",
+    "x": 26,
+    "y": 160,
+    "w": 616,
+    "h": 453
+  },
+  "rock-1": {
+    "source": "rocks",
+    "x": 710,
+    "y": 144,
+    "w": 650,
+    "h": 469
+  },
+  "rock-2": {
+    "source": "rocks",
+    "x": 1436,
+    "y": 243,
+    "w": 617,
+    "h": 349
+  },
+  "lamp": {
+    "source": "lamp",
+    "x": 223,
+    "y": 138,
+    "w": 481,
+    "h": 1424
+  }
+}

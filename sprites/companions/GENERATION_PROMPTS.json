@@ -1,0 +1,18 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "../abenteurer.png",
+  "prompts": [
+    {
+      "id": "hund",
+      "prompt": "Use case: stylized-concept. Asset type: a production game companion sprite sheet with genuine transparent background. Reference image is STYLE ONLY: match its richly shaded crisp retro pixel art, dark warm outlines, top-down RPG 3/4 view, tiny but detailed character proportions. Subject: a small friendly golden-brown dog, floppy ears, cream muzzle, bushy tail, no clothing. Exactly 16 complete sprites arranged in a precise regular 4 column by 4 row grid, generous transparent padding in every cell. Row 1 faces down toward viewer, row 2 faces left, row 3 faces right, row 4 faces up away from viewer. Each row: idle, walking first step, passing step, walking opposite step. Same creature identity, size, anchor and camera in all cells. Every sprite shows the entire creature with all ears, legs and tail inside its cell. Cute and suitable for children. Clean square pixels, no antialiasing, no text, no labels, no floor, no shadows, no backdrop, no scenery. Fully transparent between sprites, not a checkerboard. Companion is smaller than the reference hero when used in the game."
+    },
+    {
+      "id": "frosch",
+      "prompt": "Use case: stylized-concept. Asset type: a production game companion sprite sheet with genuine transparent background. Reference image is STYLE ONLY: match its richly shaded crisp retro pixel art, dark warm outlines, top-down RPG 3/4 view, tiny but detailed character proportions. Subject: a small friendly bright green frog, cream belly, golden eyes, four little feet, no clothing. Exactly 16 complete sprites arranged in a precise regular 4 column by 4 row grid, generous transparent padding in every cell. Row 1 faces down toward viewer, row 2 faces left, row 3 faces right, row 4 faces up away from viewer. Each row: idle, walking first step, passing step, walking opposite step. Same creature identity, size, anchor and camera in all cells. Every sprite shows the entire creature with all ears, legs and tail inside its cell. Cute and suitable for children. Clean square pixels, no antialiasing, no text, no labels, no floor, no shadows, no backdrop, no scenery. Fully transparent between sprites, not a checkerboard. Companion is smaller than the reference hero when used in the game."
+    },
+    {
+      "id": "spinne",
+      "prompt": "Use case: stylized-concept. Asset type: a production game companion sprite sheet with genuine transparent background. Reference image is STYLE ONLY: match its richly shaded crisp retro pixel art, dark warm outlines, top-down RPG 3/4 view, tiny but detailed character proportions. Subject: a small friendly violet-brown spider, eight legs, round furry body and two big kind eyes, no clothing. Exactly 16 complete sprites arranged in a precise regular 4 column by 4 row grid, generous transparent padding in every cell. Row 1 faces down toward viewer, row 2 faces left, row 3 faces right, row 4 faces up away from viewer. Each row: idle, walking first step, passing step, walking opposite step. Same creature identity, size, anchor and camera in all cells. Every sprite shows the entire creature with all ears, legs and tail inside its cell. Cute and suitable for children. Clean square pixels, no antialiasing, no text, no labels, no floor, no shadows, no backdrop, no scenery. Fully transparent between sprites, not a checkerboard. Companion is smaller than the reference hero when used in the game."
+    }
+  ]
+}

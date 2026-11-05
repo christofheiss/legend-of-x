@@ -1,0 +1,131 @@
+{
+  "1": {
+    "file": "krabbor.png",
+    "name": "Krabbor",
+    "maxWidth": 326,
+    "maxHeight": 244,
+    "baseline": 315,
+    "span": 722,
+    "height": 377,
+    "frames": [
+      {
+        "x": 23,
+        "y": 87,
+        "w": 720,
+        "h": 375,
+        "anchorX": 359,
+        "anchorY": 373
+      },
+      {
+        "x": 784,
+        "y": 85,
+        "w": 720,
+        "h": 379,
+        "anchorX": 359,
+        "anchorY": 377
+      },
+      {
+        "x": 23,
+        "y": 575,
+        "w": 720,
+        "h": 373,
+        "anchorX": 359,
+        "anchorY": 371
+      },
+      {
+        "x": 782,
+        "y": 574,
+        "w": 722,
+        "h": 373,
+        "anchorX": 359,
+        "anchorY": 371
+      }
+    ]
+  },
+  "2": {
+    "file": "mechatron-x.png",
+    "name": "MECHATRON X",
+    "maxWidth": 286,
+    "maxHeight": 288,
+    "baseline": 322,
+    "span": 524,
+    "height": 526,
+    "frames": [
+      {
+        "x": 87,
+        "y": 50,
+        "w": 521,
+        "h": 525,
+        "anchorX": 260,
+        "anchorY": 523
+      },
+      {
+        "x": 687,
+        "y": 47,
+        "w": 522,
+        "h": 528,
+        "anchorX": 261,
+        "anchorY": 526
+      },
+      {
+        "x": 86,
+        "y": 621,
+        "w": 523,
+        "h": 526,
+        "anchorX": 260,
+        "anchorY": 524
+      },
+      {
+        "x": 687,
+        "y": 622,
+        "w": 523,
+        "h": 525,
+        "anchorX": 261,
+        "anchorY": 523
+      }
+    ]
+  },
+  "3": {
+    "file": "nullox.png",
+    "name": "NULLOX",
+    "maxWidth": 258,
+    "maxHeight": 292,
+    "baseline": 318,
+    "span": 465,
+    "height": 609,
+    "frames": [
+      {
+        "x": 113,
+        "y": 13,
+        "w": 448,
+        "h": 604,
+        "anchorX": 220,
+        "anchorY": 602
+      },
+      {
+        "x": 683,
+        "y": 13,
+        "w": 452,
+        "h": 609,
+        "anchorX": 224,
+        "anchorY": 607
+      },
+      {
+        "x": 105,
+        "y": 639,
+        "w": 465,
+        "h": 611,
+        "anchorX": 228,
+        "anchorY": 609
+      },
+      {
+        "x": 695,
+        "y": 639,
+        "w": 440,
+        "h": 604,
+        "anchorX": 212,
+        "anchorY": 602
+      }
+    ]
+  }
+}
