@@ -209,6 +209,44 @@ sub("Löse seine Rechenaufträge und bringe die Maschine aus dem Takt. Präzise 
 sub("Prüfe Stellenwerte, Rechenzeichen und die verlangte Einheit.", "Prüfe Rechenzeichen und Vorzeichen.")
 sub("Ein Überschlag hilft dir, die Grössenordnung einzuschätzen.", "Mache die Probe.")
 
+# ---------- Anmeldung und Speichern (js/access.js) ----------
+rx(r'<div class="legend-field">\s*<label for="loginName">.*?</div>', """<input type="hidden" id="loginName">
+            <div class="legend-field">
+                <label for="loginCode">DEIN CODE</label>
+                <div class="login-code-row"><input type="text" id="loginCode" placeholder="3A07-K7QM-X2PD-9HTR" autocomplete="off" autocapitalize="characters" spellcheck="false" class="mcu-input" aria-describedby="loginError"><button type="button" id="qrButton" class="login-qr-button">QR scannen</button></div>
+                <div id="qrWrap" hidden><video id="qrVideo" playsinline muted></video><button type="button" id="qrCancel" class="login-qr-button">Abbrechen</button></div>
+            </div>""")
+sub('onsubmit="event.preventDefault();startNewGame();"', 'onsubmit="event.preventDefault();window.legendLogin&&window.legendLogin();"')
+sub("Wähle deinen Namen. Schreib deine Legende.", "Melde dich mit deinem Code an. Dein Spielstand wird gefunden.")
+sub("<legend>WÄHLE DEIN NIVEAU</legend>", "<legend>NIVEAU BEIM ERSTEN START</legend>")
+sub("<legend>WÄHLE DEINEN SPIELMODUS</legend>", "<legend>SPIELMODUS BEIM ERSTEN START</legend>")
+sub("<span>Abenteuer beginnen</span>", "<span>Anmelden und spielen</span>")
+sub("<span>ODER REISE FORTSETZEN</span>", "<span>ODER AUS DATEI</span>")
+sub("Lade deinen gespeicherten Spielstand (.json).", "Code eingeben, dann deine Spielstand-Datei (.lox) wählen.")
+sub('<input type="file" id="fileUpload" accept=".json,application/json" hidden>', '<input type="file" id="fileUpload" accept=".json,application/json" hidden><input type="file" id="secureUpload" accept=".lox" hidden>')
+sub("onclick=\"document.getElementById('fileUpload').click()\"", "onclick=\"document.getElementById('secureUpload').click()\"")
+sub("Bitte gib deinen Namen ein und wähle ein Niveau. Oder lade einen gültigen JSON-Spielstand.", "Bitte gib deinen Code ein.")
+sub('<button id="btn-save-progress"', '<p id="saveNotice" role="status" hidden></p><button id="btn-save-progress"')
+sub(".filter(k=>k!=='updatedAt')", ".filter(k=>k!=='updatedAt'&&k!=='lernZeit')")
+html = html.replace("Sichere deinen Fortschritt über SPEICHERN als JSON-Datei.", "Sichere deinen Fortschritt mit SPEICHERN.")
+html = html.replace("oben SPEICHERN wählen und die JSON-Datei beim nächsten Start über DATEN HOCHLADEN laden.", "oben SPEICHERN wählen. Beim nächsten Start meldest du dich wieder mit deinem Code an.")
+html = html.replace("mit SPEICHERN als JSON-Datei", "mit SPEICHERN").replace("Speichere deine JSON-Datei und zeige", "Speichere und zeige")
+html = html.replace("Sichere deine Änderungen mit SPEICHERN als JSON-Datei.", "Sichere deine Änderungen mit SPEICHERN.").replace("der zuletzt geladenen oder heruntergeladenen JSON-Datei", "dem zuletzt gespeicherten Stand")
+rx(r"<section><h3>Speichern und fortsetzen</h3>.*?</section>", "<section><h3>Speichern und fortsetzen</h3><p>Melde dich immer mit deinem Code an und gib ihn nicht weiter. Klicke am Ende der Lektion auf <strong>SPEICHERN</strong>. Dein Stand wird verschlüsselt online gesichert und deine Lehrperson sieht deinen Lernstand. Klappt das nicht, wird eine Datei (.lox) heruntergeladen: Gib sie deiner Lehrperson ab. Beim nächsten Mal findest du deinen Stand automatisch, sobald du deinen Code eingibst.</p></section>")
+sub("</head>", """<style>
+.login-code-row { display:flex; gap:8px; }
+.login-code-row input { flex:1 1 auto; min-width:0; }
+#loginCode { font:13px/1.2 monospace; letter-spacing:0; padding-left:8px; padding-right:8px; }
+.login-qr-button { flex:0 0 auto; padding:6px 10px; border:1px solid #a0a77c; background:#17302b; color:#f0e4c2; font:700 12px Arial,sans-serif; cursor:pointer; }
+#qrWrap[hidden] { display:none; }
+#qrWrap video { display:block; width:100%; max-height:190px; margin:8px 0; background:#000; object-fit:cover; }
+#saveNotice { position:fixed; top:12px; left:50%; transform:translateX(-50%); z-index:300; margin:0; padding:10px 16px; max-width:min(90vw,560px); background:#14352b; border:1px solid #8bc48f; color:#eaf6e6; font:600 14px Arial,sans-serif; }
+#saveNotice[data-ok="false"] { background:#40241c; border-color:#e0a07f; }
+#saveNotice[hidden] { display:none; }
+</style>
+</head>""")
+sub("</body>", '<script type="module" src="js/access.js"></script>\n</body>')
+
 # ---------- Theorieheft als einfaches PDF ----------
 def make_pdf(title, sections):
     lines = [("B", 16, title), ("N", 10, "mathbuch 3, LU 11 Gleichungen lösen und LU 10 Alt und Jung"), ("N", 10, "")]

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The Legend of X – Masterview</title>
+<style>
+:root { color-scheme: light; --line:#c9d3cc; --ink:#17302b; --soft:#eef3ef; --good:#2f7d4f; --warn:#b5651d; --bad:#b23a2e; }
+* { box-sizing:border-box; }
+body { margin:0; background:#f7f9f7; color:var(--ink); font:15px/1.45 system-ui,-apple-system,Segoe UI,Arial,sans-serif; }
+header { padding:14px 20px; background:var(--ink); color:#f3ecd3; }
+header h1 { margin:0; font-size:20px; }
+main { padding:18px 20px; max-width:1500px; margin:auto; }
+.box { background:#fff; border:1px solid var(--line); border-radius:6px; padding:14px; margin-bottom:16px; }
+label { display:block; font-weight:600; margin:10px 0 4px; }
+button,.file { display:inline-block; padding:7px 12px; border:1px solid var(--ink); background:#fff; color:var(--ink); border-radius:4px; font:600 14px inherit; cursor:pointer; }
+button.main { background:var(--ink); color:#fff; }
+input[type=password] { padding:7px; width:min(340px,100%); }
+.error { color:var(--bad); min-height:1.3em; }
+.tiles { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:10px; }
+.tile { border:1px solid var(--line); border-radius:6px; padding:10px; background:var(--soft); }
+.tile b { display:block; font-size:22px; }
+.tile span { overflow-wrap:anywhere; }
+.scroll { overflow-x:auto; }
+table { border-collapse:collapse; width:100%; font-size:13px; }
+th,td { border:1px solid var(--line); padding:4px 6px; text-align:center; white-space:nowrap; }
+th.q { writing-mode:vertical-rl; transform:rotate(180deg); font-weight:600; height:150px; }
+td.left,th.left { text-align:left; }
+td.ok { background:#d7eedd; } td.try { background:#fdeccf; }
+tr[data-id] { cursor:pointer; } tr[data-id]:hover td.left { background:var(--soft); }
+.flag { color:var(--bad); font-weight:700; }
+.muted { color:#5b6b63; }
+[hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<header><h1>The Legend of X · Masterview</h1></header>
+<main>
+  <section id="lock" class="box">
+    <p>Entsperre die Masterview mit dem Dongle von MathWelt 3A. Die Datei und das Passwort bleiben in deinem Browser.</p>
+    <label for="dongleFile">Dongle-Datei</label>
+    <input type="file" id="dongleFile" accept=".mw3akey,.json">
+    <label for="pw">Passwort</label>
+    <input type="password" id="pw" autocomplete="off">
+    <p><button class="main" id="unlock">Entsperren</button></p>
+    <p class="error" id="lockError" role="alert"></p>
+  </section>
+
+  <div id="app" hidden>
+    <section class="box">
+      <button class="main" id="online">Online-Stände laden</button>
+      <label class="file" style="display:inline-block;margin:0">Dateien laden (.lox)<input type="file" id="files" accept=".lox" multiple hidden></label>
+      <button id="csv">CSV herunterladen</button>
+      <span id="status" class="muted" role="status"></span>
+    </section>
+    <section class="box"><h2 style="margin-top:0">Klasse nach Lernziel</h2><div class="tiles" id="tiles"></div></section>
+    <section class="box"><h2 style="margin-top:0">Übersicht</h2><div class="scroll" id="overview"></div>
+      <p class="muted">Grün = abgeschlossen, Orange = begonnen. Zahl = falsche Antworten insgesamt. Der Testzugang ist markiert, weil damit Quests ohne Lösung freigeschaltet werden können. Klicke auf eine Zeile für die Details.</p></section>
+    <section class="box" id="detail" hidden></section>
+  </div>
+</main>
+<script type="module" src="js/teacher.js"></script>
+</body>
+</html>

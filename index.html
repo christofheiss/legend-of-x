@@ -1026,6 +1026,17 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
 .lu-table th,.lu-table td { border:1px solid #bbb; padding:4px 10px; text-align:right; }
 .lu-table th:first-child,.lu-table td:first-child { text-align:left; }
 </style>
+<style>
+.login-code-row { display:flex; gap:8px; }
+.login-code-row input { flex:1 1 auto; min-width:0; }
+#loginCode { font:13px/1.2 monospace; letter-spacing:0; padding-left:8px; padding-right:8px; }
+.login-qr-button { flex:0 0 auto; padding:6px 10px; border:1px solid #a0a77c; background:#17302b; color:#f0e4c2; font:700 12px Arial,sans-serif; cursor:pointer; }
+#qrWrap[hidden] { display:none; }
+#qrWrap video { display:block; width:100%; max-height:190px; margin:8px 0; background:#000; object-fit:cover; }
+#saveNotice { position:fixed; top:12px; left:50%; transform:translateX(-50%); z-index:300; margin:0; padding:10px 16px; max-width:min(90vw,560px); background:#14352b; border:1px solid #8bc48f; color:#eaf6e6; font:600 14px Arial,sans-serif; }
+#saveNotice[data-ok="false"] { background:#40241c; border-color:#e0a07f; }
+#saveNotice[hidden] { display:none; }
+</style>
 </head>
 <body class="min-h-screen flex flex-col hologram-bg">
 
@@ -1040,14 +1051,16 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
     </div>
     <section class="legend-gate" aria-labelledby="legend-gate-title">
         <h2 id="legend-gate-title">Deine Reise beginnt.</h2>
-        <p class="legend-form-intro">Wähle deinen Namen. Schreib deine Legende.</p>
-        <form id="legend-start-form" onsubmit="event.preventDefault();startNewGame();">
+        <p class="legend-form-intro">Melde dich mit deinem Code an. Dein Spielstand wird gefunden.</p>
+        <form id="legend-start-form" onsubmit="event.preventDefault();window.legendLogin&&window.legendLogin();">
+            <input type="hidden" id="loginName">
             <div class="legend-field">
-                <label for="loginName">DEIN HELDENNAME</label>
-                <input type="text" id="loginName" placeholder="Dein Name …" autocomplete="off" class="mcu-input" aria-describedby="loginError">
+                <label for="loginCode">DEIN CODE</label>
+                <div class="login-code-row"><input type="text" id="loginCode" placeholder="3A07-K7QM-X2PD-9HTR" autocomplete="off" autocapitalize="characters" spellcheck="false" class="mcu-input" aria-describedby="loginError"><button type="button" id="qrButton" class="login-qr-button">QR scannen</button></div>
+                <div id="qrWrap" hidden><video id="qrVideo" playsinline muted></video><button type="button" id="qrCancel" class="login-qr-button">Abbrechen</button></div>
             </div>
             <fieldset class="legend-field">
-                <legend>WÄHLE DEIN NIVEAU</legend>
+                <legend>NIVEAU BEIM ERSTEN START</legend>
                 <div class="legend-niveaux">
                     <label class="niveau-label"><input type="radio" name="loginNiveau" value="C" class="legend-niveau-input"><div>Niveau <strong>C</strong></div></label>
                     <label class="niveau-label"><input type="radio" name="loginNiveau" value="B" class="legend-niveau-input"><div>Niveau <strong>B</strong></div></label>
@@ -1055,19 +1068,19 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
                 </div>
             </fieldset>
             <fieldset class="legend-field">
-                <legend>WÄHLE DEINEN SPIELMODUS</legend>
+                <legend>SPIELMODUS BEIM ERSTEN START</legend>
                 <div class="legend-niveaux difficulty-choices">
                     <label class="niveau-label" data-tooltip="Hinweise und Zielmarkierungen zeigen dir den Weg."><input type="radio" name="loginDifficulty" value="easy" class="legend-niveau-input" aria-label="Geführt: Hinweise und Zielmarkierungen zeigen dir den Weg." checked><div>Geführt</div></label>
                     <label class="niveau-label" data-tooltip="Du suchst die Aufgaben selbst."><input type="radio" name="loginDifficulty" value="hard" class="legend-niveau-input" aria-label="Freies Erkunden: Du suchst die Aufgaben selbst."><div>Freies Erkunden</div></label>
                 </div>
             </fieldset>
-            <button type="submit" id="legend-start-button" class="legend-start-button"><span>Abenteuer beginnen</span><span aria-hidden="true">→</span></button>
+            <button type="submit" id="legend-start-button" class="legend-start-button"><span>Anmelden und spielen</span><span aria-hidden="true">→</span></button>
         </form>
-        <div class="legend-divider"><span></span><span>ODER REISE FORTSETZEN</span><span></span></div>
-        <p id="upload-progress-caption" class="legend-upload-caption">Lade deinen gespeicherten Spielstand (.json).</p>
-        <input type="file" id="fileUpload" accept=".json,application/json" hidden>
-        <button type="button" id="btn-upload-progress" aria-describedby="upload-progress-caption" onclick="document.getElementById('fileUpload').click()" class="legend-upload-button"><svg aria-hidden="true" width="19" height="19" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3M12 16V4m-4 4l4-4 4 4"/></svg><span>Daten hochladen</span></button>
-        <p id="loginError" role="alert" class="text-red-500 text-sm mt-4 hidden">Bitte gib deinen Namen ein und wähle ein Niveau. Oder lade einen gültigen JSON-Spielstand.</p>
+        <div class="legend-divider"><span></span><span>ODER AUS DATEI</span><span></span></div>
+        <p id="upload-progress-caption" class="legend-upload-caption">Code eingeben, dann deine Spielstand-Datei (.lox) wählen.</p>
+        <input type="file" id="fileUpload" accept=".json,application/json" hidden><input type="file" id="secureUpload" accept=".lox" hidden>
+        <button type="button" id="btn-upload-progress" aria-describedby="upload-progress-caption" onclick="document.getElementById('secureUpload').click()" class="legend-upload-button"><svg aria-hidden="true" width="19" height="19" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3M12 16V4m-4 4l4-4 4 4"/></svg><span>Daten hochladen</span></button>
+        <p id="loginError" role="alert" class="text-red-500 text-sm mt-4 hidden">Bitte gib deinen Code ein.</p>
     </section>
     
 </div>
@@ -1098,7 +1111,7 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
                 <button id="btn-settings" onclick="openSettings()" class="game-header-button mcu-btn mcu-btn-warn px-4 py-2 text-sm font-bold flex items-center hidden md:flex">
                     EINSTELLUNGEN
                 </button>
-                <button id="btn-save-progress" onclick="saveProgress()" class="game-header-button mcu-btn px-4 py-2 text-sm font-bold flex items-center transition-all duration-500">
+                <p id="saveNotice" role="status" hidden></p><button id="btn-save-progress" onclick="saveProgress()" class="game-header-button mcu-btn px-4 py-2 text-sm font-bold flex items-center transition-all duration-500">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     SPEICHERN
                 </button>
@@ -1254,7 +1267,7 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
                     
                     <div id="s1-m1-success" class="hidden text-center py-4">
                         <h2 class="orbitron text-2xl text-green-400">QUEST ERFOLGREICH</h2>
-                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt über SPEICHERN als JSON-Datei.</p>
+                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt mit SPEICHERN.</p>
                         <div class="flex flex-col gap-3 justify-center">
                             <button onclick="restoreMissionView('s1-m1', 's1m1', 1)" class="mcu-btn border-green-500 text-green-400 hover:bg-green-500 hover:text-black px-6 py-2 text-sm font-bold">👁️ URSPRÜNGLICHE AUFGABEN & LÖSUNGEN ANZEIGEN</button>
                             <button onclick="closeModal()" class="text-slate-400 hover:text-white font-mono text-sm">ZUR KARTE</button>
@@ -1295,7 +1308,7 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
                     
                     <div id="s1-m2-success" class="hidden text-center py-4">
                         <h2 class="orbitron text-2xl text-green-400">QUEST ERFOLGREICH</h2>
-                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt über SPEICHERN als JSON-Datei.</p>
+                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt mit SPEICHERN.</p>
                         <div class="flex flex-col gap-3 justify-center">
                             <button onclick="document.getElementById('s1-m2-success').classList.add('hidden'); document.getElementById('s1-m2-forms').style.display='block'; document.getElementById('btn-eval-s1-m2').style.display='block'; checkS1M2();" class="mcu-btn border-green-500 text-green-400 hover:bg-green-500 hover:text-black px-6 py-2 text-sm font-bold">👁️ URSPRÜNGLICHE AUFGABEN & LÖSUNGEN ANZEIGEN</button>
                             <button onclick="closeModal()" class="text-slate-400 hover:text-white font-mono text-sm">ZUR KARTE</button>
@@ -1311,7 +1324,7 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
                     
                     <div id="s1-m3-success" class="hidden text-center py-4">
                         <h2 class="orbitron text-2xl text-green-400">QUEST ERFOLGREICH</h2>
-                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt über SPEICHERN als JSON-Datei.</p>
+                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt mit SPEICHERN.</p>
                         <div class="flex flex-col gap-3 justify-center">
                             <button onclick="restoreMissionView('s1-m3', 'm3', 1)" class="mcu-btn border-green-500 text-green-400 hover:bg-green-500 hover:text-black px-6 py-2 text-sm font-bold">👁️ URSPRÜNGLICHE AUFGABEN & LÖSUNGEN ANZEIGEN</button>
                             <button onclick="closeModal()" class="text-slate-400 hover:text-white font-mono text-sm">ZUR KARTE</button>
@@ -1327,7 +1340,7 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
                     
                     <div id="s1-m4-success" class="hidden text-center py-4">
                         <h2 class="orbitron text-2xl text-green-400">QUEST ERFOLGREICH</h2>
-                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt über SPEICHERN als JSON-Datei.</p>
+                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt mit SPEICHERN.</p>
                         <div class="flex flex-col gap-3 justify-center">
                             <button onclick="restoreMissionView('s1-m4', 'm4', 1)" class="mcu-btn border-green-500 text-green-400 hover:bg-green-500 hover:text-black px-6 py-2 text-sm font-bold">👁️ URSPRÜNGLICHE AUFGABEN & LÖSUNGEN ANZEIGEN</button>
                             <button onclick="closeModal()" class="text-slate-400 hover:text-white font-mono text-sm">ZUR KARTE</button>
@@ -1343,7 +1356,7 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
                     
                     <div id="s1-m5-success" class="hidden text-center py-4">
                         <h2 class="orbitron text-2xl text-green-400">QUEST ERFOLGREICH</h2>
-                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt über SPEICHERN als JSON-Datei.</p>
+                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt mit SPEICHERN.</p>
                         <div class="flex flex-col gap-3 justify-center">
                             <button onclick="restoreMissionView('s1-m5', 'm5', 1)" class="mcu-btn border-green-500 text-green-400 hover:bg-green-500 hover:text-black px-6 py-2 text-sm font-bold">👁️ URSPRÜNGLICHE AUFGABEN & LÖSUNGEN ANZEIGEN</button>
                             <button onclick="closeModal()" class="text-slate-400 hover:text-white font-mono text-sm">ZUR KARTE</button>
@@ -1375,7 +1388,7 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
                     
                     <div id="s2-m1-success" class="hidden text-center py-4">
                         <h2 class="orbitron text-2xl text-green-400">QUEST ERFOLGREICH</h2>
-                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt über SPEICHERN als JSON-Datei.</p>
+                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt mit SPEICHERN.</p>
                         <div class="flex flex-col gap-3 justify-center">
                             <button onclick="restoreMissionView('s2-m1', 's2m1', 2)" class="mcu-btn border-green-500 text-green-400 hover:bg-green-500 hover:text-black px-6 py-2 text-sm font-bold">👁️ URSPRÜNGLICHE AUFGABEN & LÖSUNGEN ANZEIGEN</button>
                             <button onclick="closeModal()" class="text-slate-400 hover:text-white font-mono text-sm">ZUR KARTE</button>
@@ -1393,7 +1406,7 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
                     
                     <div id="s2-m2-success" class="hidden text-center py-4">
                         <h2 class="orbitron text-2xl text-green-400">QUEST ERFOLGREICH</h2>
-                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt über SPEICHERN als JSON-Datei.</p>
+                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt mit SPEICHERN.</p>
                         <div class="flex flex-col gap-3 justify-center">
                             <button onclick="restoreMissionView('s2-m2', 's2m2', 2)" class="mcu-btn border-green-500 text-green-400 hover:bg-green-500 hover:text-black px-6 py-2 text-sm font-bold">👁️ URSPRÜNGLICHE AUFGABEN & LÖSUNGEN ANZEIGEN</button>
                             <button onclick="closeModal()" class="text-slate-400 hover:text-white font-mono text-sm">ZUR KARTE</button>
@@ -1411,7 +1424,7 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
                     
                     <div id="s2-m3-success" class="hidden text-center py-4">
                         <h2 class="orbitron text-2xl text-green-400">QUEST ERFOLGREICH</h2>
-                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt über SPEICHERN als JSON-Datei.</p>
+                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt mit SPEICHERN.</p>
                         <div class="flex flex-col gap-3 justify-center">
                             <button onclick="restoreMissionView('s2-m3', 's2m3', 2)" class="mcu-btn border-green-500 text-green-400 hover:bg-green-500 hover:text-black px-6 py-2 text-sm font-bold">👁️ URSPRÜNGLICHE AUFGABEN & LÖSUNGEN ANZEIGEN</button>
                             <button onclick="closeModal()" class="text-slate-400 hover:text-white font-mono text-sm">ZUR KARTE</button>
@@ -1429,7 +1442,7 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
                     
                     <div id="s2-m4-success" class="hidden text-center py-4">
                         <h2 class="orbitron text-2xl text-green-400">QUEST ERFOLGREICH</h2>
-                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt über SPEICHERN als JSON-Datei.</p>
+                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt mit SPEICHERN.</p>
                         <div class="flex flex-col gap-3 justify-center">
                             <button onclick="restoreMissionView('s2-m4', 's2m4', 2)" class="mcu-btn border-green-500 text-green-400 hover:bg-green-500 hover:text-black px-6 py-2 text-sm font-bold">👁️ URSPRÜNGLICHE AUFGABEN & LÖSUNGEN ANZEIGEN</button>
                             <button onclick="closeModal()" class="text-slate-400 hover:text-white font-mono text-sm">ZUR KARTE</button>
@@ -1447,7 +1460,7 @@ body:has(#screen-map:not(.hidden) #sector-3-container:not(.hidden)) {
                     
                     <div id="s2-m5-success" class="hidden text-center py-4">
                         <h2 class="orbitron text-2xl text-green-400">QUEST ERFOLGREICH</h2>
-                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt über SPEICHERN als JSON-Datei.</p>
+                        <p class="text-slate-300 font-mono text-sm mb-4">Quest abgeschlossen. Sichere deinen Fortschritt mit SPEICHERN.</p>
                         <div class="flex flex-col gap-3 justify-center">
                             <button onclick="restoreMissionView('s2-m5', 's2m5', 2)" class="mcu-btn border-green-500 text-green-400 hover:bg-green-500 hover:text-black px-6 py-2 text-sm font-bold">👁️ URSPRÜNGLICHE AUFGABEN & LÖSUNGEN ANZEIGEN</button>
                             <button onclick="closeModal()" class="text-slate-400 hover:text-white font-mono text-sm">ZUR KARTE</button>
@@ -2674,7 +2687,7 @@ function updateAccuracyProgress() {
     if(!appState.accuracyPractice)return;
     appState.accuracyPractice.updatedAt=new Date().toISOString();
     const note=document.getElementById('accuracy-save-note');
-    if(note)note.textContent='Zum späteren Weiterarbeiten: oben SPEICHERN wählen und die JSON-Datei beim nächsten Start über DATEN HOCHLADEN laden.';
+    if(note)note.textContent='Zum späteren Weiterarbeiten: oben SPEICHERN wählen. Beim nächsten Start meldest du dich wieder mit deinem Code an.';
 }
 function accuracyStatus(round,index) {
     const value=round.inputs[index];
@@ -3082,7 +3095,7 @@ function equipShopItem(id) {
     s.equipped[item.kind]=id;s.updatedAt=new Date().toISOString();shopPreview=null;
     if(item.kind==='effect')playShopEffect(item.id);
     applyShopAppearance();renderShop();
-    document.getElementById('shop-message').textContent=id==='emblem-rocket'?'':`${item.name} ist jetzt aktiv. Der Wechsel ist kostenlos. Sichere deine Ausrüstung mit SPEICHERN als JSON-Datei.`;
+    document.getElementById('shop-message').textContent=id==='emblem-rocket'?'':`${item.name} ist jetzt aktiv. Der Wechsel ist kostenlos. Sichere deine Ausrüstung mit SPEICHERN.`;
 }
 function buyShopItem(id) {
     const item=shopItem(id),s=ensureShopState().state;
@@ -3093,7 +3106,7 @@ function buyShopItem(id) {
     if(s.balance<item.price){document.getElementById('shop-message').textContent=`Für ${item.name} fehlen noch ${item.price-s.balance} Coins.`;return;}
     s.balance-=item.price;s.owned.push(id);
     equipShopItem(id);
-    document.getElementById('shop-message').textContent=`${item.name} gekauft und aktiviert! Sichere deinen Coinstand und deine Ausrüstung mit SPEICHERN als JSON-Datei.`;
+    document.getElementById('shop-message').textContent=`${item.name} gekauft und aktiviert! Sichere deinen Coinstand und deine Ausrüstung mit SPEICHERN.`;
 }
 function redeemAstrostutz() {
     const s=ensureShopState().state;
@@ -3102,7 +3115,7 @@ function redeemAstrostutz() {
     s.astroRedemptions.push({number:s.astroRedemptions.length+1,coins:20,amount:1,at:new Date().toISOString()});
     s.updatedAt=new Date().toISOString();
     renderShop();
-    document.getElementById('shop-message').textContent='20 Coins eingetauscht: 1 Astrostutz! Speichere deine JSON-Datei und zeige deiner Lehrperson den eingetauschten Betrag.';
+    document.getElementById('shop-message').textContent='20 Coins eingetauscht: 1 Astrostutz! Speichere und zeige deiner Lehrperson den eingetauschten Betrag.';
 }
 function renderShop() {
     const s=ensureShopState().state;
@@ -5787,7 +5800,7 @@ const SettingsMenu=(()=>{
         <section><h3>Moonbase: geringe Schwerkraft</h3><p>Auf der Moonbase braucht deine Figur etwas zum Anlaufen und gleitet nach. Mit <kbd>R</kbd> springst du. Halte gleichzeitig eine Richtung, um über Kristalle zu springen. Wenn du in einen Krater fällst, springst du mit R wieder hinaus. Gebäude, Raketen, Schluchten und der Kartenrand bleiben feste Grenzen.</p></section>
         <section><h3>Titel und Fähigkeiten</h3><p>Im Shop kannst du jeweils einen gekauften Titel aktivieren und kostenlos wechseln. Variablen-Könner hinterlässt eine leuchtende Spur. Zahlen-Stratege gibt dir mit <kbd>M</kbd> drei Sekunden Überblick. Gleichungs-Profi erhöht dein Lauftempo auf das 1.5-Fache. Hütergilde-Legende lässt deinen Helden golden leuchten. Sternenläufer startet mit <kbd>Shift</kbd> einen zweisekündigen Sprint mit doppeltem Tempo; danach folgen sechs Sekunden Erholung. Dein Begleiter hält beim schnelleren Laufen mit.</p></section>
         <section><h3>Shop und Geheimnisse</h3><p>Den Shop kannst du auf der Insel betreten. Dort kannst du Coins für Helden, Begleiter, Farben, Titel und Siegeseffekte ausgeben oder 20 Coins gegen 1 Astrostutz eintauschen.</p><p>In jeder Welt gibt es zwei Eastereggs. Untersuche die Umgebung. Den Wartungsroboter musst du zuerst aus nächster Nähe zum Anhalten bringen.</p><p>Wähle einen gekauften Begleiter im Shop aus. Er begleitet jeden Helden auf The Island und in Robotown und reist im Flugzeug mit. Bei Mondreisen wartet er beim Raketenstartplatz in Robotown. Unter Einstellungen → Käufe übertragen exportierst du deine Käufe als JSON-Datei ohne Coins für die nächste Spielwelt. Dort muss der Heldenname genau übereinstimmen.</p></section>
-        <section><h3>Speichern und fortsetzen</h3><p>Position, Antworten, Coins und Fortschritt sicherst du oben über <strong>SPEICHERN</strong> als JSON-Datei. In Edge oder Chrome wählst du beim ersten Speichern die Datei und ihren Speicherort. Weitere Klicks auf SPEICHERN aktualisieren dieselbe Datei. Beim erneuten Laden dieses Spielstands kann der Browser die Datei wiederfinden und bei Bedarf erneut um Schreibzugriff bitten. Ist die Datei nicht mehr verfügbar, wählst du sie neu. Andere Browser laden die JSON-Datei wie bisher herunter. Lade deinen Spielstand beim nächsten Start mit <strong>DATEN HOCHLADEN</strong>, um weiterzuspielen.</p><p>Nach einem besiegten Boss bearbeitest du den Zwischenstopp auf LearningView. Trage danach im Zwischenstopp deine erreichten Punkte ein. Bei voller Punktzahl geht es direkt weiter. Sonst übst du die Inhalte auf LearningView und bestätigst anschliessend hier, dass du geübt hast. Deine Ergebnisse findest du unter <strong>Einstellungen → Zwischenstopp</strong>.</p><p>Wenn alle 19 Quests abgeschlossen sind, findest du das Theoriemerkheft unter <strong>Einstellungen → Zusammenfassung</strong>.</p></section>
+        <section><h3>Speichern und fortsetzen</h3><p>Melde dich immer mit deinem Code an und gib ihn nicht weiter. Klicke am Ende der Lektion auf <strong>SPEICHERN</strong>. Dein Stand wird verschlüsselt online gesichert und deine Lehrperson sieht deinen Lernstand. Klappt das nicht, wird eine Datei (.lox) heruntergeladen: Gib sie deiner Lehrperson ab. Beim nächsten Mal findest du deinen Stand automatisch, sobald du deinen Code eingibst.</p></section>
     </div>`;
     const difficulty=document.createElement('div');difficulty.id='difficulty-content';difficulty.className='mission-content hidden';
     difficulty.innerHTML=`<div class="game-instructions"><section><h3>Spielmodus</h3><p>Der Spielmodus bestimmt die Orientierungshilfen. Dein Aufgabenniveau bleibt gleich.</p><fieldset class="legend-field" aria-label="Spielmodus"><div class="legend-niveaux difficulty-choices">
@@ -5955,11 +5968,11 @@ const SaveSafety=(()=>{
     wrap.className='save-control';button.before(wrap);wrap.appendChild(button);note.id='save-state-note';note.setAttribute('role','status');note.setAttribute('aria-live','polite');wrap.appendChild(note);
     button.setAttribute('aria-describedby',note.id);
     const reminder=document.createElement('div');reminder.id='save-close-reminder';reminder.hidden=true;reminder.setAttribute('role','alert');
-    const message=document.createElement('span');message.textContent='Vor dem Schliessen: Sichere deinen Stand oben mit SPEICHERN als JSON-Datei.';
+    const message=document.createElement('span');message.textContent='Vor dem Schliessen: Sichere deinen Stand oben mit SPEICHERN.';
     const dismiss=document.createElement('button');dismiss.type='button';dismiss.textContent='×';dismiss.setAttribute('aria-label','Speicher-Erinnerung schliessen');dismiss.addEventListener('click',()=>{reminder.hidden=true;});reminder.append(message,dismiss);document.body.appendChild(reminder);
     function stable(value){
         if(Array.isArray(value))return value.map(stable);
-        if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().filter(k=>k!=='updatedAt').map(k=>[k,stable(value[k])]));
+        if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().filter(k=>k!=='updatedAt'&&k!=='lernZeit').map(k=>[k,stable(value[k])]));
         return value;
     }
     const fingerprint=s=>JSON.stringify(stable(s));
@@ -5969,7 +5982,7 @@ const SaveSafety=(()=>{
         dirty=baseline===null||fingerprint(window.directorTestCoins.snapshotForSave())!==baseline;
         const text=dirty?'Änderungen seit dem letzten Speichern':'Keine Änderungen seit dem letzten Speichern';
         if(note.textContent!==text)note.textContent=text;note.dataset.unsaved=String(dirty);button.dataset.unsaved=String(dirty);
-        note.title=dirty?'Sichere deine Änderungen mit SPEICHERN als JSON-Datei.':'Dieser Stand entspricht der zuletzt geladenen oder heruntergeladenen JSON-Datei.';
+        note.title=dirty?'Sichere deine Änderungen mit SPEICHERN.':'Dieser Stand entspricht dem zuletzt gespeicherten Stand.';
         return dirty;
     }
     function loaded(state){owner=state;baseline=fingerprint(window.directorTestCoins.snapshotForSave());reminder.hidden=true;refresh();}
@@ -6544,5 +6557,6 @@ const GameFileSave=(()=>{
 
 NumberWriting.observe();
     </script>
+<script type="module" src="js/access.js"></script>
 </body>
 </html>
