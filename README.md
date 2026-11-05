@@ -22,7 +22,7 @@ Niveau C = Grundanspruch, B = Standard, A = Erweiterung. Alle Gemeinden und Date
 ## Anmeldung und Lernstand
 - SuS melden sich mit dem Code oder QR-Code ihrer MathWelt-3A-Karte an. Es erscheint nur die ID, kein Name. Prüfwerte und öffentlicher Schlüssel stehen in `js/config.js` und sind eine Kopie aus `mathwelt-3a`. Neue Codes müssen in beiden Repos eingetragen werden.
 - SPEICHERN verschlüsselt den Stand und schickt ihn an den Worker. Klappt das nicht, wird eine `.lox`-Datei heruntergeladen. Zusätzlich liegt der verschlüsselte Stand im Browser.
-- Die Masterview ist `lehrer.html`. Sie öffnet sich mit dem Dongle von MathWelt 3A und liest die Online-Stände aus `saves-lox/` im Daten-Repo.
+- Die Masterview ist `lehrer.html`. Sie öffnet sich mit dem Dongle von MathWelt 3A und liest die Online-Stände aus `saves-lox/` im Daten-Repo. Der Lese-Schlüssel lässt sich direkt dort einrichten und im Dongle speichern.
 
 ### Einmalige Einrichtung: Worker aktualisieren
 Bei Cloudflare den Worker `mathwelt-3a-save` öffnen → **Edit code** → alles durch `worker/worker.js` aus diesem Repo ersetzen → **Deploy**. Die Variablen bleiben. MathWelt 3A läuft unverändert weiter. Der Code in `mathwelt-3a/worker/worker.js` ist danach älter als der laufende Worker.

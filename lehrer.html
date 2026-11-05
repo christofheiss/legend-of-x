@@ -52,7 +52,28 @@ tr[data-id] { cursor:pointer; } tr[data-id]:hover td.left { background:var(--sof
       <button class="main" id="online">Online-Stände laden</button>
       <label class="file" style="display:inline-block;margin:0">Dateien laden (.lox)<input type="file" id="files" accept=".lox" multiple hidden></label>
       <button id="csv">CSV herunterladen</button>
+      <button id="dongleBtn">Dongle speichern</button>
       <span id="status" class="muted" role="status"></span>
+    </section>
+    <section class="box" id="cloudBox" hidden>
+      <h2 style="margin-top:0">Lese-Schlüssel einrichten</h2>
+      <p>Die Online-Stände liegen in einem privaten GitHub-Repo. Dafür braucht die Masterview einmalig einen Lese-Schlüssel. Erstelle ihn auf <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub</a>: nur für dieses Repo, bei «Contents» die Berechtigung «Read-only».</p>
+      <label for="clRepo">Daten-Repo</label>
+      <input type="text" id="clRepo" spellcheck="false" autocomplete="off" style="padding:7px;width:min(340px,100%)">
+      <label for="clToken">Lese-Schlüssel</label>
+      <input type="password" id="clToken" autocomplete="off">
+      <p><button class="main" id="clSave">Prüfen und laden</button> <button id="clClose">Abbrechen</button></p>
+      <p class="error" id="clError" role="alert"></p>
+    </section>
+    <section class="box" id="dongleBox" hidden>
+      <h2 style="margin-top:0">Dongle speichern</h2>
+      <p>Speichert den Dongle samt Lese-Schlüssel als neue Datei. Sie gilt auch für MathWelt 3A. Lege sie an einen privaten Ort und lösche den alten Dongle erst, wenn der neue funktioniert.</p>
+      <label for="pw1">Passwort (mindestens 10 Zeichen)</label>
+      <input type="password" id="pw1" autocomplete="new-password">
+      <label for="pw2">Passwort wiederholen</label>
+      <input type="password" id="pw2" autocomplete="new-password">
+      <p><button class="main" id="dgSave">Dongle herunterladen</button> <button id="dgClose">Abbrechen</button></p>
+      <p class="error" id="dgError" role="alert"></p>
     </section>
     <section class="box"><h2 style="margin-top:0">Klasse nach Lernziel</h2><div class="tiles" id="tiles"></div></section>
     <section class="box"><h2 style="margin-top:0">Übersicht</h2><div class="scroll" id="overview"></div>

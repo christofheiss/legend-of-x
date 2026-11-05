@@ -1,5 +1,6 @@
 // The Legend of X: Masterview. Liest die verschlüsselten Stände nur mit dem Dongle.
 import * as K from './crypto.js';
+import { CONFIG } from './config.js';
 
 const QUESTS = [
   ['1.1', 'Repetition', 'LZ1'], ['1.2', 'Waage-Werkstatt', 'LZ1'], ['1.3', 'Plus und Minus', 'LZ1'], ['1.4', 'Umkehr-Turm', 'LZ1'], ['1.5', 'Zwei Schritte', 'LZ1'], ['1.6', 'Boss Krabbor', 'LZ1 LZ4'],
@@ -43,8 +44,7 @@ $('files').onchange = async (e) => {
 async function github(path, accept) {
   return fetch(`https://api.github.com/repos/${dongle.cloud.repo}/contents/${path}`, { headers: { Authorization: `Bearer ${dongle.cloud.token}`, Accept: accept, 'X-GitHub-Api-Version': '2022-11-28' }, cache: 'no-store' });
 }
-$('online').onclick = async () => {
-  if (!dongle.cloud?.token || !dongle.cloud?.repo) { $('status').textContent = 'Dieser Dongle enthält noch keinen Lese-Schlüssel. Richte ihn in der Masterview von MathWelt 3A ein.'; return; }
+async function loadOnline() {
   $('online').disabled = true; $('status').textContent = 'Lade …';
   try {
     const list = await github('saves-lox', 'application/vnd.github+json');
@@ -58,6 +58,43 @@ $('online').onclick = async () => {
     render();
   } catch (e) { $('status').textContent = 'Laden nicht möglich: ' + e.message; }
   finally { $('online').disabled = false; }
+}
+$('online').onclick = () => {
+  if (dongle.cloud?.token && dongle.cloud?.repo) return loadOnline();
+  $('clRepo').value = dongle.cloud?.repo || CONFIG.dataRepo || '';
+  $('clToken').value = ''; $('clError').textContent = '';
+  $('cloudBox').hidden = false; $('clToken').focus();
+};
+$('clClose').onclick = () => { $('cloudBox').hidden = true; };
+$('clSave').onclick = async () => {
+  const repo = $('clRepo').value.trim(), tok = $('clToken').value.trim();
+  if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) { $('clError').textContent = 'Das Repo braucht die Form name/repo.'; return; }
+  if (!tok) { $('clError').textContent = 'Bitte den Lese-Schlüssel eingeben.'; return; }
+  const before = dongle.cloud; dongle.cloud = { repo, token: tok };
+  let res;
+  try { res = await github('', 'application/vnd.github+json'); } catch { res = null; }
+  if (!res?.ok) {
+    dongle.cloud = before;
+    $('clError').textContent = !res ? 'GitHub ist nicht erreichbar.' : res.status === 401 ? 'Dieser Schlüssel ist ungültig oder abgelaufen.' : res.status === 403 || res.status === 404 ? 'Dieser Schlüssel darf das Repo nicht lesen. Prüfe das Repo und die Berechtigung.' : 'GitHub meldet Fehler ' + res.status + '.';
+    return;
+  }
+  $('clToken').value = ''; $('cloudBox').hidden = true;
+  await loadOnline();
+  $('status').append(' Wichtig: Klicke jetzt auf «Dongle speichern», sonst musst du den Schlüssel beim nächsten Mal wieder eingeben.');
+  $('dongleBox').hidden = false;
+};
+$('dongleBtn').onclick = () => { $('dgError').textContent = ''; $('dongleBox').hidden = false; $('pw1').focus(); };
+$('dgClose').onclick = () => { $('dongleBox').hidden = true; };
+$('dgSave').onclick = async () => {
+  const a = $('pw1').value, b = $('pw2').value;
+  if (a.length < 10) { $('dgError').textContent = 'Das Passwort braucht mindestens 10 Zeichen.'; return; }
+  if (a !== b) { $('dgError').textContent = 'Die beiden Passwörter sind verschieden.'; return; }
+  const file = await K.makeDongle({ ...dongle, updated: Date.now() }, a);
+  const url = URL.createObjectURL(new Blob([JSON.stringify(file)], { type: 'application/json' }));
+  const link = document.createElement('a'); link.href = url; link.download = 'MathWelt3A_Lehrer.dongle.mw3akey'; link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  $('pw1').value = ''; $('pw2').value = ''; $('dongleBox').hidden = true;
+  $('status').textContent = 'Neuer Dongle heruntergeladen.';
 };
 
 function questDone(st, key) {
